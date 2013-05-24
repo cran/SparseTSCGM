@@ -1,0 +1,3 @@
+useDynLib("SparseTSCGM")
+export("sparse.tscgm","sim.data")
+

@@ -1,0 +1,11 @@
+8bc11aedc16cad57d264717160884b2a *DESCRIPTION
+171fe5f7a616617fcc0fb870ae666491 *NAMESPACE
+b80a98c539fdc8fce14aa8559677fc03 *R/compute.sparse.tscgm.R
+0a3af1ad7a21977800583bc69b2c7f1a *R/rblasso.R
+b6a90493479d6199195298bf069f5157 *R/sim.data.R
+bfe3b47fa804ef9917184d4b76c34fb1 *R/sparse.tscgm.R
+9d5fc16833b17fecd60b694f84730761 *R/sparse.tscgm.bic.R
+2e6cff763a6d6add4c615535fb9c3c15 *man/SparseTSCGM-package.Rd
+99bf7731eac6212acfe628b3dfad05aa *man/sim.data.Rd
+c96f8836bce320392668835cdc4e83f9 *man/sparse.tscgm.Rd
+dcdce867fc85cdf84279e3183cc3ae25 *src/stscgm-solveb.c
