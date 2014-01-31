@@ -1,47 +1,48 @@
 \name{sim.data}
 \alias{sim.data}
 \title{
-Simulation from first order autoregressive time series chain graphical models
+Multivariate time series simulation with chain graphical models
 }
 \description{
-This function provides repeated multivariate time series simulated data from
-random chain graph represented by precision and autoregressive coefficients matrices.
-}
+Generates sparse vector autoregressive coefficients matrices and
+  precision matrix from various network structures and using these matrices
+  generates  repeated multivariate  time series dataset.
+  }
 \usage{
-sim.data(time=time,n_obs=n_obs, n_var=n_var,prob0=prob0)
+ sim.data(model=c("ar1","ar2"),time=time,n.obs=n.obs, n.var=n.var,
+     prob0=prob0, network=c("random","cluster","hub"))
 }
 \arguments{
-   \item{time}{Number of time points.
+  \item{model}{
+Specifies the order of vector autoregressive models. Vector autoregressive
+  model of order 1 is applied if \code{model} = "ar1" and Vector autoregressive
+  model of order 2 is applied if  method = "ar2".
 }
-  \item{n_obs}{Number of repeated observations at each time point.
- }
-  \item{n_var}{ Number of variables.
+  \item{time}{ Number of time points.}
+  \item{n.obs}{ Number of observations or replicates.}
+  \item{n.var}{Number of variables.}
+  \item{prob0}{Initial sparsity level.}
+  \item{network}{
+Specifies the type of network structure. This could be random, scale-free or hub
+structures. Details on simultions from the various network structures can be
+found in the R package \code{flare}.
 }
-  \item{prob0}{The probability that a pair of nodes has an edge. 
- }
-}
+  }
 \value{
 A list containing:
-\item{data1}{Simulated data in longitudinal data format.}
-\item{true_omega}{Precision matrix.}
-\item{true_gamma}{Autoregressive coefficients matrix.}
-}
-\references{
-Fentaw Abegaz and Ernst wit (2012) Sparse time series chain graphical models
-  for reconstructing genetic networks. Biostatistics, doi:10.1093/biostatistics/kxt005.
-
-Li H., Zhao T., Wang L. Yuan X. and Lui H. (2013), flare: Family of Lasso Regression (R
-  package), http://flare.r-forge.r-project.org
+\item{theta}{Sparse precision matrix. }
+\item{gamma}{Sparse autoregressive coefficients matrix.}
+\item{data1}{Repeated multivariate time series data in longitudinal format.}
 }
 \author{
   Fentaw Abegaz and Ernst Wit
 }
 
 \examples{
-#Simulated data from random graph
-set.seed(1)
-simu <- sim.data(time=10,n_obs=5, n_var=20,prob0=0.15)
-Sdata <- simu$data1
-prec.mat <- simu$true_omega
-autoreg.mat <- simu$true_gamma
+set.seed(321)
+datas <- sim.data(model="ar1", time=20,n.obs=20, n.var=20,prob0=0.15,
+         network="hub")
+data.ts <-  datas$data1
+prec_true <- datas$theta
+autoR_true <- datas$gamma
 }

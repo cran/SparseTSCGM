@@ -7,7 +7,21 @@ Sparse time series chain graphical models.
 }
 \description{
 Computes sparse autoregressive coefficient and precision matrices for time
- series chain graphical models.
+ series chain graphical models(TSCGM). These models provide an effeicient way of 
+ simultaneously dealing with Gaussian graphical models (undirected graphs for 
+ instantaneous interactions) and Bayesian networks (directed graphs for dynamic
+ interactions) for reconstructing instantaneous and dynamic networks from 
+ repeated multivariate time series data. 
+ }
+\details{
+\tabular{ll}{
+Package: \tab SparseTSCGM\cr
+Type: \tab Package\cr
+Version: \tab 2.0\cr
+Date: \tab 2014-01-31\cr
+License: \tab GPL (>=3) \cr
+LazyLoad: \tab yes\cr
+}
 }
 
 \author{
@@ -16,48 +30,38 @@ Fentaw Abegaz and Ernst Wit
 Maintainer: Fentaw Abegaz <f.abegaz.yazew@rug.nl>
 }
 \references{
-Fentaw Abegaz and Ernst wit (2013) Sparse time series chain graphical models  
-  for reconstructing genetic networks. Biostatistics, doi:10.1093/biostatistics/kxt005.
+\cite{Fentaw Abegaz and Ernst Wit (2013). Sparse time series chain graphical
+  models for reconstructing genetic networks. \emph{Biostatistics}.
+  \bold{14}, 3: 586-599.}
   
-Rothman, A.J., Levina, E., and Zhu, J. (2010) Sparse multivariate regression 
-  with covariance estimation. Journal of Computational and Graphical 
-  Statistics. 19: 947--962.
+\cite{Rothman, A.J., Levina, E., and Zhu, J. (2010). Sparse multivariate regression 
+  with covariance estimation. \emph{Journal of Computational and Graphical 
+  Statistics}. \bold{19}: 947--962.}
 }
 \keyword{package}
-
-
 \examples{
-#Simulated data from random graph
-set.seed(1)
-simu <- sim.data(time=10,n_obs=5, n_var=20,prob0=0.15)
-Sdata <- simu$data1
 
-lam1=0.43
-lam2=0.27
+set.seed(321)
+datas <- sim.data(model="ar1", time=20,n.obs=25, n.var=10,prob0=0.35,
+         network="random")
+data.fit <-  datas$data1
+prec_true <- datas$theta
+autoR_true <- datas$gamma
+    
+   
+res.tscgm <- sparse.tscgm(data=data.fit, lam1=NULL, lam2=NULL, nlambda=NULL, 
+ model="ar1", optimality="bic_ext",control=list(maxit.out = 10, maxit.in = 100))
+   
+#Estimated sparse precision and autoregression matrices
+prec <- res.tscgm$theta
+autoR <- res.tscgm$gamma
 
-res.tscgm <- sparse.tscgm(data=Sdata, lam1=lam1, lam2=lam2, B.start = NULL, 
-              model.select="null", maxit.out = 100, maxit.in = 500, 
-             tol.out = 1e-04, tol.in = 1e-05, silent = TRUE) 
-B <- res.tscgm$Bhat
-om <- res.tscgm$omega
-
-### Plot chain graph
-
-  ### plot of undirected graph
+#Graphical visualization
+par(mfrow=c(2,2))
+plot.tscgm(datas, mat="precision",main="True precision matrix")         
+plot.tscgm(res.tscgm, mat="precision",main="Estimated precision matrix")     
+plot.tscgm(datas, mat="autoregression",main="True autoregression coef. matrix")    
+plot.tscgm(res.tscgm, mat="autoregression",
+           main="Estimated autoregression coef. matrix") 
   
-colnames(om) <-  rownames(om) <- colnames(Sdata)
-network_precm <- network(om)
-plot.network(network_precm,label = network.vertex.names(network_precm),
-  usearrows = FALSE, displayisolates = FALSE, pad = 0.01,label.pad = 0.3, 
-  label.col = 6, vertex.col = 5,vertex.cex = 1.5,
-  edge.col = 4, mode = "fruchtermanreingold", interactive=FALSE)
-
-   ### Plot of directed graph
- 
-colnames(B) <-  rownames(B) <- colnames(Sdata)
-network.autoregm <- network(B)
-plot.network(network.autoregm,label = network.vertex.names(network.autoregm),
-  usearrows = TRUE, displayisolates = FALSE, pad = 0.01,label.pad = 0.3, 
-  label.col = 6, vertex.col = 5,vertex.cex = 1.5,
-  edge.col = 3, mode = "fruchtermanreingold", interactive=FALSE)
 }

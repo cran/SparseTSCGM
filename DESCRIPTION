@@ -1,16 +1,17 @@
 Package: SparseTSCGM
 Type: Package
 Title: Sparse time series chain graphical models
-Version: 1.0
-Date: 2013-05-24
+Version: 2.0
+Date: 2014-01-31
+Depends: R(>= 3.0.2)
+Imports: glasso, longitudinal, flare, MASS, mvtnorm, network, abind
 Author: Fentaw Abegaz and Ernst Wit
 Maintainer: Fentaw Abegaz <f.abegaz.yazew@rug.nl>
-Depends: R (>= 3.0.0), glasso, longitudinal, flare, mvtnorm, network
-Description: Compute and plot sparse autoregressive coefficient and
-        precision matrices for time series chain graphical models.
+Description: Computes sparse vector autoregressive coefficients and precision 
+ matrices for time series chain graphical models.
 License: GPL (>= 3)
 LazyLoad: yes
-Packaged: 2013-05-24 12:05:56 UTC; P261204
+Packaged: 2014-01-31 15:35:12 UTC; P261204
 NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2013-05-24 15:38:46
+Date/Publication: 2014-01-31 17:43:43

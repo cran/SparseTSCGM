@@ -4,134 +4,159 @@
 Sparse time series chain graphical models
 }
 \description{
-Computes sparse autoregressive coefficients matrix and precision matrix estimates 
-  for time series chain graphical models using SCAD penalty. In time series chain
-  graphical models \code{directed} edges or links  are identified by nonzero 
-  entries of the autoregressive coefficients matrix and \code{undirected} edges 
-  or links  are identified by nonzero entries of the precision matrix.
+Computes sparse vector autoregressive coefficients matrices of order 1 and 
+  order 2   and precision matrix estimates for time series chain graphical 
+  models using SCAD penalty. In time series chain graphs \code{directed}
+  edges are identified by nonzero entries of the autoregressive 
+  coefficients matrix and \code{undirected} edges  are identified by 
+  nonzero entries  of the precision matrix.
 }
 \usage{
-sparse.tscgm(data=data, lam1 = lam1, lam2 = lam2, B.start = NULL, 
-     model.select = c("null", "bic"), maxit.out = 100,  maxit.in = 500, 
-     tol.out = 1e-04, tol.in = 1e-05, tol = 1e-05, silent = TRUE)
+sparse.tscgm(data = data, lam1 = NULL, lam2 = NULL, nlambda = NULL, 
+      model = c("ar1", "ar2"), 
+      optimality = c("NULL", "bic", "bic_ext", "bic_mod", "aic", "gic"), 
+      control = list())
 }
 \arguments{
-   \item{data}{Longitudinal data format.
+  \item{data}{
+Longitudinal data format.
 }
   \item{lam1}{
 Either a scalar or a vector of tuning parameter values for the 
-  SCAD penalty on the precision matrix. If \code{lam1} is a vector with length 
-  at least 2, \code{minimum BIC} will be performed to select the optimal tuning
-  parameter.
+  SCAD penalty on the precision matrix. The default is \code{lam1}=NULL and 
+  the program generates a sequence of tuning parameter values based on 
+  \code{nlambda}. The user can also specify a sequence to change the default 
+  sequence. If \code{lam1} is a vector with length at least 2, information 
+  criteria based model selection will be performed to select the optimal 
+  tuning parameter.
 }
   \item{lam2}{
 Either a scalar or a vector of tuning parameter values for the 
-  SCAD penalty on the autoregression matrix. If \code{lam2} is a vector with length 
-  at least 2, \code{minimum BIC} will be performed to select the optimal tuning
-  parameter.
+  SCAD penalty on the precision matrix. The default is \code{lam2}=NULL and 
+  the program generates a sequence of tuning parameter values based on 
+  \code{nlambda}. The user can also specify a sequence to chance the default 
+  sequence. If \code{lam2} is a vector with length at least 2, information 
+  criteria based model selection will be performed to select the optimal 
+  tuning parameter.
 }
-  \item{B.start}{
-The user can optionally specify a starting value for the 
-  autoregresive coefficients matrix.
+  \item{nlambda}{
+The number of values used in \code{lam1} and \code{lam2}. Default value is 10.
 }
-  \item{model.select}{
-\code{model.select="null"} computes the time series chain graphical model solutions 
-  using specified scalar values of the tuning parameters \code{lam1} and \code{lam2},
-  \code{model.select="bic"} first selects the optimal SCAD tuning parameter values 
-  using the minimum BIC criterion from specified vectors of tuning parameters for 
-  \code{lam1} and \code{lam2} then computes the time series chain graphical model   
-  solutions based on the optimal tuning parameter values.
-  The default is \code{model.select="null".}
+  \item{model}{
+This specifies the order of vector autoregressive models. Vector autoregressive 
+  model of order 1 is applied if \code{model} = "ar1" and Vector autoregressive 
+  model of order 2 is applied if  method = "ar2". 
 }
- \item{maxit.out}{The maximum allowable outer iterations of the algorithm. The
-  outer-loop iterates alternatively to estimate the precision matrix and the 
-  autoregression matrix until convergence.  
+  \item{optimality}{
+This specifies the type of information based model selection criteria. When
+  optimality is "NULL" it computes the time series chain graphical model 
+  solutions   for specified scalar values of the tuning parameters \code{lam1} 
+  and \code{lam2}. The rest optimality criteria first selects the optimal SCAD
+  tuning parameter values using the minimum information criterion from vectors
+  of tuning parameters for \code{lam1} and \code{lam2} then computes the time 
+  series chain graphical model solutions based on the optimal tuning parameter
+  values. 
+  These are:  "BIC" (Bayesian Information Criteria),
+  "bic_ext" (Extended Bayesian Information Criteria),
+  "bic_mod" (Modified Bayesian Information Criteria)
+  "aic" (Akakie Information Criteria), and
+  "gic" (Generalized Information Criteria).
 }
-  \item{maxit.in}{The maximum allowable iterations of the algorithm that minimizes 
-  with respect to the autoregression coefficient matrix.
-}
-  \item{tol.out}{Convergence tolerance for outer-loop of the algorithm that alternate 
-  between the estimation of precision matrix and autoregressive coefficients
-  matrix.
-}
-  \item{tol.in}{Convergence tolerance for inner-loop of the algorithm  that minimizes 
-  with respect to the autoregression coefficient matrix.
-}
-  \item{tol}{Convergence tolerance for the algorithm  that minimizes 
-  with respect to the autoregressive coefficients matrix.
-}
-  \item{silent}{Either \code{TRUE} or \code{FALSE}.  If \code{silent=FALSE} 
-  this function will display progress updates to the screen.
+  \item{control}{
+  The argument \code{control} includes a list of control parameters passed to 
+  the main function. The user can specify its own control parameter values to 
+  replace the default values. 
+  
+   control = list(maxit.out = 5, maxit.in = 50, tol.out = 1e-04, 
+   silent = TRUE)  
+   
+   \code{maxit.out} : The maximum allowable outer iterations of the algorithm. 
+   The outer-loop iterates alternatively to estimate the precision matrix and 
+   the autoregression matrix until convergence. Default is 5.  
+   \code{maxit.in}: The maximum allowable iterations of the algorithm that 
+   minimizes with respect to the autoregression coefficient matrix. 
+   Default is 50.
+   \code{tol.out}: Convergence tolerance for outer-loop of the algorithm that 
+  alternate between the estimation of precision matrix and autoregressive 
+  coefficients matrix.Default is 1e-04.
+  \code{silent}: Either \code{TRUE} or \code{FALSE}.  If \code{silent=FALSE} 
+  this function will display progress updates to the screen. Default is TRUE.
 }
 }
 \details{
-For description of the objective functions see Abegaz and Wit (2012). 
+For description of the objective functions and computational details 
+see Abegaz and Wit (2013).
 }
 \value{
 A list containing:
-\item{Bhat}{Autoregressive coefficients matrix estimate. The nonzero estimates of 
-the autoregression matrix can be used to represent \code{directed} edges or links  for
-chain graphical modeling.}
-\item{omega}{Precision matrix estimate. The nonzero estimates of 
-the precision matrix can be used to represent \code{undirected} edges or links  for
-chain graphical modeling.}
-\item{lambda1}{The optimal tuinng parameter for the SCAD penalty on the precision
-matrix selected with minimum BIC criterion. If tuning parameter selection 
-using BIC is not performed, \code{lambda1} will be \code{NULL}}.
-\item{lambda2}{The optimal tuinng parameter for the SCAD penalty on the autoregressive
-coefficients matrix selected with minimum BIC criterion. If tuning parameter selection 
-using BIC is not performed, \code{lambda2} will be \code{NULL}.} 
+\item{theta}{Precision matrix estimate. The nonzero estimates of 
+the precision matrix are used for constructing \code{undirected} graphs that 
+represent conditional independences at time lag 0 or instantaneous interactions.}
+\item{gamma}{Autoregressive coefficients matrix estimate. The nonzero estimates
+of the autoregression matrix are used for constructing \code{directed} graphs 
+that represent conditional independences at time lag 1, time lag 2 or dynamic 
+interactions.}
+\item{lam1.opt}{The optimal tuning parameter for SCAD penalty on the precision
+matrix selected with minimum information criterion.} 
+\item{lam2.opt}{The optimal tuning parameter for SCAD penalty on the 
+autoregressive coefficients matrix selected with minimum BIC criterion.} 
+\item{min.ic}{Minimum value of the optimality criterion.}
+\item{tun.ic}{A matrix containing the list of tuning parameter values and the 
+corresponding model selection or optimality values.}
+\item{lam1.seq}{The sequence of tuning parameter values related to 
+precision matrix.}
+\item{lam2.seq}{The sequence of tuning parameter values related to 
+autoregression matrix.}
+\item{s.theta}{Sparsity level of the precision matrix.}
+\item{s.gamma}{Sparsity level of the autoregression coefficients matrix.}
 }
 \references{
-Fentaw Abegaz and Ernst wit (2012) Sparse time series chain graphical models  
-  for reconstructing genetic networks. Biostatistics, doi:10.1093/biostatistics/kxt005.
+\cite{Fentaw Abegaz and Ernst Wit (2013). Sparse time series chain graphical
+  models for reconstructing genetic networks. \emph{Biostatistics}.
+  \bold{14}, 3: 586-599.}
   
-Rothman, A.J., Levina, E., and Zhu, J. (2010) Sparse multivariate regression 
-  with covariance estimation. Journal of Computational and Graphical 
-  Statistics. 19: 947--962.
+\cite{Rothman, A.J., Levina, E., and Zhu, J. (2010). Sparse multivariate 
+  regression with covariance estimation. \emph{Journal of Computational 
+  and Graphical Statistics}. \bold{19}: 947--962.}
 }
 \author{
   Fentaw Abegaz and Ernst Wit
 }
-\note{
-For some tuning parameter values the  algorithm may run very slowly. 
- Use \code{silent=FALSE} to check if the algorithm
- is converging before the total iterations exceeds \code{maxit.out}. 
-}
-
 
 \examples{
-#Simulated data from random graph
-set.seed(1)
-simu <- sim.data(time=10,n_obs=5, n_var=20,prob0=0.15)
-Sdata <- simu$data1
 
-lam1=0.43
-lam2=0.27
+set.seed(321)
+datas <- sim.data(model="ar1", time=20,n.obs=25, n.var=10,prob0=0.35,
+         network="random")
+data.fit <-  datas$data1
+prec_true <- datas$theta
+autoR_true <- datas$gamma
+    
+   
+res.tscgm <- sparse.tscgm(data=data.fit, lam1=NULL, lam2=NULL, nlambda=NULL, 
+ model="ar1", optimality="bic_ext",control=list(maxit.out = 10, maxit.in = 100))
+   
+#Estimated sparse precision and autoregression matrices
+prec <- res.tscgm$theta
+autoR <- res.tscgm$gamma
 
-res.tscgm <- sparse.tscgm(data=Sdata, lam1=lam1, lam2=lam2, B.start = NULL, 
-              model.select="null", maxit.out = 100, maxit.in = 500, 
-             tol.out = 1e-04, tol.in = 1e-05, silent = TRUE) 
-B <- res.tscgm$Bhat
-om <- res.tscgm$omega
+#Optimal tuning parameter values
+lambda1.opt <- res.tscgm$lam1.opt
+lambda2.opt <- res.tscgm$lam2.opt
 
-### Plot chain graph
+#Sparsity levels
+sparsity_theta <- res.tscgm$s.theta
+sparsity_gamma <- res.tscgm$s.gamma
 
-  ### plot of undirected graph 
-  
-colnames(om) <-  rownames(om) <- colnames(Sdata)
-network_precm <- network(om)
-plot.network(network_precm,label = network.vertex.names(network_precm),
-  usearrows = FALSE, displayisolates = FALSE, pad = 0.01,label.pad = 0.3, 
-  label.col = 6, vertex.col = 5,vertex.cex = 1.5,
-  edge.col = 4, mode = "fruchtermanreingold", interactive=FALSE)
+#Graphical visualization
+par(mfrow=c(2,2))
+plot.tscgm(datas, mat="precision",main="True precision matrix")         
+plot.tscgm(res.tscgm, mat="precision",main="Estimated precision matrix")     
+plot.tscgm(datas, mat="autoregression",main="True autoregression coef. matrix")     
+plot.tscgm(res.tscgm, mat="autoregression",
+             main="Estimated autoregression coef. matrix") 
 
-   ### Plot of directed graph
- 
-colnames(B) <-  rownames(B) <- colnames(Sdata)
-network.autoregm <- network(B)
-plot.network(network.autoregm,label = network.vertex.names(network.autoregm),
-  usearrows = TRUE, displayisolates = FALSE, pad = 0.01,label.pad = 0.3, 
-  label.col = 6, vertex.col = 5,vertex.cex = 1.5,
-  edge.col = 3, mode = "fruchtermanreingold", interactive=FALSE)
+
 }
+
+
