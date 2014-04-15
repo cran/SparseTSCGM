@@ -50,6 +50,7 @@ function(X=X, Y=Y, lam1 = lam1, lam2 = lam2,
       out4 = glasso(WS, rho = 0, zero = ZeroIndex) ##Compute un-penalized estimastion
       lik1  = determinant( out4$wi)$modulus[1]
       lik2 <- sum(diag( out4$wi%*%WS))##min
+    
       ###Number of nonzero entries
      	diag(PO)=0
     	pdO = sum(sum(PO !=0))
@@ -73,7 +74,7 @@ function(X=X, Y=Y, lam1 = lam1, lam2 = lam2,
    }}
     res.scad <- cbind(lam1h, lam2h, BICh)
    ### Determining the minimum Bic and optimal penalty parameter
-   bicm <- min(res.scad[,3])
+   bicm <- min(res.scad[,3], na.rm = TRUE)
       for(c in 1:lamR){
       if(res.scad[c,3]==bicm){
        lam1.opt <- res.scad[c,1]

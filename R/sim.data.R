@@ -1,24 +1,35 @@
 
 sim.data <-
-  function(model=c("ar1","ar2"),time=time,n.obs=n.obs, n.var=n.var,prob0=prob0,network=c("random","cluster","hub")){
+  function(model=c("ar1","ar2"),time=time,n.obs=n.obs, n.var=n.var,prob0=NULL,
+  network=c("random","scale-free","hub","user_defined"),
+  prec=NULL,gamma1=NULL,gamma2=NULL){
   model=match.arg(model)
   network=match.arg(network)
   t=time
   n=n.obs
   d=n.var
+  r= round(runif(1),4)*10000
   if(model=="ar1") {
     if(network=="random") {
-      L = flare.tiger.generator(n=n,d=d,graph="random", prob=prob0, seed=1234, vis = FALSE)
-      LL = flare.tiger.generator(n=n,d=d,graph="random", prob=prob0, seed=4567, vis = FALSE)
+      L = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=1234+r, vis = FALSE)
+      LL = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=4567+r, vis = FALSE)
     }
     else if(network=="cluster") {
-      L = flare.tiger.generator(n=n,d=d,graph="cluster", prob=prob0, seed=1234, vis = FALSE)
-      LL = flare.tiger.generator(n=n,d=d,graph="cluster", prob=prob0, seed=4567, vis = FALSE)
+      L = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=1234+r, vis = FALSE)
+      LL = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=4567+r, vis = FALSE)
     }
     else if(network=="hub") {
-     L = flare.tiger.generator(n=n,d=d,graph="hub", prob=prob0, seed=1234, vis = FALSE)
-    LL = flare.tiger.generator(n=n,d=d,graph="hub", prob=prob0, seed=4567, vis = FALSE)
+     L = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=1234+r, vis = FALSE)
+    LL = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=4567+r, vis = FALSE)
    }
+   if(network=="user_defined"){
+       mu <- rep(0,d)
+       true_theta <- prec
+       sigma1 <- solve(prec)
+       true_gamma <- gamma1
+       B <- true_gamma
+   }
+  else{
   true_theta = as.matrix(L$omega*L$theta)
   diag(true_theta)=1     ##theta is the precision matrix
   sigma1 <- L$sigma
@@ -31,14 +42,15 @@ sim.data <-
   uu=runif(d,0,1)
   uau = ua*uu
   diag(B)= uau
-  true_gamma=B         #Gamma is the autoregressive coefficient matrix
+  true_gamma=B
+  }        #Gamma is the autoregressive coefficient matrix
   ##data generation
   xtn <-array(NA,c(t,d,n))
   xtt <- array(NA,c(t,d,1))
   for(i in 1:n){
-    x0 <- rmvnorm(1,mu,sigma1)
+    x0 <- rmvnorm(1, mu, sigma1, method="svd")
     for(j in 1:t){
-      et <- rmvnorm(1,mu,sigma1)
+      et <- rmvnorm(1, mu, sigma1, method="svd")
       xt <-  x0 %*% B + et
       xtt[j,,] <- xt
       x0 <- xt
@@ -51,20 +63,28 @@ sim.data <-
  }
  if(model=="ar2") {
   if(network=="random") {
-    L = flare.tiger.generator(n=n,d=d,graph="random", prob=prob0, seed=12346, vis = FALSE)
-    LL = flare.tiger.generator(n=n,d=d,graph="random", prob=prob0, seed=45678, vis = FALSE)
-    LLL = flare.tiger.generator(n=n,d=d,graph="random", prob=prob0, seed=43219, vis = FALSE)
+    L = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=12346+r, vis = FALSE)
+    LL = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=45678+r, vis = FALSE)
+    LLL = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=43219+r, vis = FALSE)
   }
   else if(network=="cluster") {
-   L = flare.tiger.generator(n=n,d=d,graph="cluster", prob=prob0, seed=12346, vis = FALSE)
-   LL = flare.tiger.generator(n=n,d=d,graph="cluster", prob=prob0, seed=45678, vis = FALSE)
-   LLL = flare.tiger.generator(n=n,d=d,graph="cluster", prob=prob0, seed=43219, vis = FALSE)
+   L = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=12346+r, vis = FALSE)
+   LL = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=45678+r, vis = FALSE)
+   LLL = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=43219+r, vis = FALSE)
   }
  else if(network=="hub") {
-  L = flare.tiger.generator(n=n,d=d,graph="hub", prob=prob0, seed=12346, vis = FALSE)
-  LL = flare.tiger.generator(n=n,d=d,graph="hub", prob=prob0, seed=45678, vis = FALSE)
-  LLL = flare.tiger.generator(n=n,d=d,graph="hub", prob=prob0, seed=43219, vis = FALSE)
+  L = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=12346+r, vis = FALSE)
+  LL = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=45678+r, vis = FALSE)
+  LLL = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=43219+r, vis = FALSE)
  }
+ if(network=="user_defined"){
+        mu <- rep(0,d)
+       true_theta <- prec
+       sigma1 <- solve(prec)
+       B1 <- gamma2
+       B2 <- gamma1
+      }
+  else{
  true_theta = as.matrix(L$omega*L$theta)
  diag(true_theta)=1     ##omega is the precision matrix
  sigma1 <- L$sigma
@@ -85,15 +105,16 @@ sim.data <-
  uu=runif(d,0,1)
  uau = ua*uu
  diag(B2)= uau
+ }
 #B1and B2 are the autoregressive coefficient matrices
 ##data generation
  xtn <-array(NA,c(t,d,n))
  xtt <- array(NA,c(t,d,1))
  for(i in 1:n){
-  x0 <- rmvnorm(1,mu,sigma1)
-  x1 <- rmvnorm(1,mu,sigma1)
+  x0 <- rmvnorm(1, mu, sigma1, method="svd")
+  x1 <- rmvnorm(1, mu, sigma1, method="svd")
   for(j in 1:t){
-    et <- rmvnorm(1,mu,sigma1)
+    et <- rmvnorm(1, mu, sigma1, method="svd")
     xt <-   x1 %*% B2 +  x0 %*% B1 + et
     xtt[j,,] <- xt
     x0 <- x1
@@ -104,7 +125,7 @@ sim.data <-
   true_gamma <- rbind(B2, B1)
   xy=matrix(aperm(xtn, c(3,1,2)), ncol=d)
   data1 <- as.longitudinal(xy, repeats=n)
-  
+
  return(list(data1=data1,theta=true_theta, gamma=true_gamma))
  }
 }

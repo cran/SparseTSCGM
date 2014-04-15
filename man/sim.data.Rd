@@ -9,8 +9,9 @@ Generates sparse vector autoregressive coefficients matrices and
   generates  repeated multivariate  time series dataset.
   }
 \usage{
- sim.data(model=c("ar1","ar2"),time=time,n.obs=n.obs, n.var=n.var,
-     prob0=prob0, network=c("random","cluster","hub"))
+ sim.data(model=c("ar1","ar2"),time=time,n.obs=n.obs, n.var=n.var,prob0=NULL,
+          network=c("random","scale-free","hub","user_defined"),
+          prec=NULL,gamma1=NULL,gamma2=NULL)
 }
 \arguments{
   \item{model}{
@@ -23,10 +24,13 @@ Specifies the order of vector autoregressive models. Vector autoregressive
   \item{n.var}{Number of variables.}
   \item{prob0}{Initial sparsity level.}
   \item{network}{
-Specifies the type of network structure. This could be random, scale-free or hub
-structures. Details on simultions from the various network structures can be
-found in the R package \code{flare}.
+Specifies the type of network structure. This could be random, scale-free, hub
+or user defined structures. Details on simultions from the various network 
+structures can be found in the R package \code{flare}.
 }
+  \item{prec}{Precision matrix.}
+  \item{gamma1}{Autoregressive coefficients matrix at time lag 1.}
+  \item{gamma2}{Autoregressive coefficients matrix at time lag 2.}
   }
 \value{
 A list containing:

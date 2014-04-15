@@ -61,45 +61,30 @@ sparse.tscgm <- function(data=data, lam1=NULL, lam2=NULL, nlambda=NULL, model=c(
   yty2=(n*T)*colMeans(apply(YY2, c(1,2), sum))
 
   if(is.null(lam1) | is.null(lam2) )  {
-      SS =(yty)/(n*T)
-      SS = cov2cor(SS)
-      if(model=="ar1"){
-        SA = xty #/(n*T)
-        SA = SA/sqrt(xtx2*yty2)
-      }
-      if(model=="ar2"){
-           X0 <- xy.data[1:time-1,,]
-           Y0 <- xy.data[2:time,,]
-           T <- dim(Y0)[1]
-           p1 <- dim(X0)[2]
-           n <- dim(Y0)[3]
-           q1 <- dim(Y0)[2]
-           xtyi1 <- array(NA, c(p1,q1,n))
-           xtxi1 <- array(NA, c(p1,p1,n))
-           ytyi1 <- array(NA, c(q1,q1,n))
-
-          for(i in 1:n){
-            XX1 <- X0[,,i]
-            YY1 <- Y0[,,i]
-            XX21 <- X0[,,i]^2
-            YY21 <- Y0[,,i]^2
-            xtyi1[,,i]=crossprod(XX1,YY1)
-            xtxi1[,,i]=crossprod(XX1)
-            ytyi1[,,i]=crossprod(YY1)
-          }
-          xty1=apply(xtyi1, c(1,2), sum)
-          xtx1=apply(xtxi1, c(1,2), sum)
-          yty1=apply(ytyi1, c(1,2), sum)
-          xtxt1=apply(xtxi1, c(1,2), sum)/(n*T)
-          xtx21=(n*T)*colMeans(apply(XX21, c(1,2), sum))
-          yty21=(n*T)*colMeans(apply(YY21, c(1,2), sum))
-          SA = xty1 #/(n*T)
-          SA = SA/sqrt(xtx21*yty21)
-        }
-      diag(SA)=1
+      SX <- xtx/(n*T)
+      mSX <- glasso(SX,0.05,penalize.diagonal=FALSE)
+      if(model == "ar1") {
+          SX <- xtx/(n*T)
+          mSX <- glasso(SX,0.05,penalize.diagonal=FALSE)
+          SXi <- mSX$wi
+          SS =(yty)/(n*T)
+          SS = cov2cor(SS)
+          SAs = xty/(n*T)
+          SA = SAs %*% SXi
+         }
+      if(model == "ar2") {
+          SX <- xtx/(n*T)
+          mSX <- glasso(SX,0.05,penalize.diagonal=FALSE)
+          SXi <- mSX$wi
+          SS =(yty)/(n*T)
+          SS = cov2cor(SS)
+          SAs = xty/(n*T)
+          SA =  SXi %*% SAs
+         }
       lambda <-  lambda.seq(SS=SS,SA=SA, nlambda=nlambda)
-      lam1 <- lambda$lambda1
-      lam2 <- lambda$lambda2
+      lam1 <- round(lambda$lambda1,3) 
+      lam2 <- round(lambda$lambda2,3)
+      lam2 <- round(lam2/max(lam2),3)    
     }
 
     optimality = match.arg(optimality)
@@ -164,7 +149,11 @@ sparse.tscgm <- function(data=data, lam1=NULL, lam2=NULL, nlambda=NULL, model=c(
         optimality="gic", setting=setting)
     }
     gamma = tmp.out$gamma
+    gamma = gamma*(1*(abs(gamma) > 0.01))
+
     theta = tmp.out$theta
+    theta = theta*(1*(abs(theta) > 0.01))
+
     lam1.opt = tmp.out$lam1.opt
     lam2.opt = tmp.out$lam2.opt
     lam1.seq = tmp.out$lam1.seq
@@ -173,8 +162,13 @@ sparse.tscgm <- function(data=data, lam1=NULL, lam2=NULL, nlambda=NULL, model=c(
     s.theta = tmp.out$s.theta
     tun.ic = tmp.out$tun.ic
     min.ic = tmp.out$min.ic
-    colnames(gamma) <- rownames(gamma) <- colnames(data)
-	  colnames(theta) <- rownames(theta) <- colnames(data)
+    if(model=="ar1") {colnames(gamma) <- colnames(data)}
+    else if(model=="ar2"){
+     colnames(gamma) <- colnames(data)
+     rownames(gamma) <- c(colnames(data), colnames(data))
+     }
+	   colnames(theta) <- rownames(theta) <- colnames(data)
+	   ###
     return(list(gamma = gamma, theta = theta, lam1.opt=lam1.opt, lam2.opt=lam2.opt, lam1.seq=lam1.seq, lam2.seq=lam2.seq,
      min.ic=min.ic, tun.ic=tun.ic, s.gamma=s.gamma,  s.theta=s.theta))
 

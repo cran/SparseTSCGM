@@ -11,7 +11,7 @@ plot.tscgm <- function(x, mat=c("precision","autoregression"),...){
  else if (mat == "autoregression") {
       autoR <- x$gamma
       #colnames(autoR) <- rownames(autoR) <- colnames(data)
-      nw_full <- network(autoR)
+      nw_full <- network(autoR, loops=TRUE)
       plot.network(nw_full,label = network.vertex.names(nw_full), usearrows = TRUE,
         displayisolates = FALSE,...)
    }
