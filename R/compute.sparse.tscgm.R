@@ -52,7 +52,7 @@ compute.sparse.tscgm <- function(X=X, Y=Y, lam1=lam1, lam2=lam2,
            if(abs(old1.om[i,j]) <= lam1 ) wt[i,j] <- lam1
              else { if((lam1 <= abs(old1.om[i,j])) & (abs(old1.om[i,j]) <  a*lam1 )) {
              wt[i,j] <- ((a*lam1-abs(old1.om[i,j]))/((a-1))) }
-          	   else wt[i,j] <-  lam1 }
+          	   else wt[i,j] <-  0 }
         }}
         diag(wt) <- lam1
         ##Estimating the precision matrix using Glasso based on SCAD penalty
@@ -77,7 +77,7 @@ compute.sparse.tscgm <- function(X=X, Y=Y, lam1=lam1, lam2=lam2,
               if(abs(old.B[i,j]) <= lam2 ) wt1[i,j] <- lam2
               else {if((lam2 < abs(old.B[i,j])) & (abs(old.B[i,j]) <  a*lam2 )) {
                   wt1[i,j] <- ((a*lam2-abs(old.B[i,j]))/((a-1))) }
-               else wt1[i,j] <-   lam2  }
+               else wt1[i,j] <-   0  }
 
           }}
         

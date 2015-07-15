@@ -126,8 +126,8 @@ autoregression matrix.}
 \examples{
 
 set.seed(321)
-datas <- sim.data(model="ar1", time=20,n.obs=25, n.var=10,prob0=0.35,
-         network="random")
+datas <- sim.data(model="ar1", time=10,n.obs=10, n.var=5,prob0=0.35,
+         network="scale-free")
 data.fit <-  datas$data1
 prec_true <- datas$theta
 autoR_true <- datas$gamma

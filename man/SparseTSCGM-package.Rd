@@ -3,7 +3,7 @@
 \alias{SparseTSCGM}
 \docType{package}
 \title{
-Sparse time series chain graphical models.
+Sparse Time Series Chain Graphical Models.
 }
 \description{
 Computes sparse autoregressive coefficient and precision matrices for time
@@ -17,8 +17,8 @@ Computes sparse autoregressive coefficient and precision matrices for time
 \tabular{ll}{
 Package: \tab SparseTSCGM\cr
 Type: \tab Package\cr
-Version: \tab 2.0\cr
-Date: \tab 2014-01-31\cr
+Version: \tab 2.2\cr
+Date: \tab 2015-07-15\cr
 License: \tab GPL (>=3) \cr
 LazyLoad: \tab yes\cr
 }
@@ -42,8 +42,8 @@ Maintainer: Fentaw Abegaz <f.abegaz.yazew@rug.nl>
 \examples{
 
 set.seed(321)
-datas <- sim.data(model="ar1", time=20,n.obs=25, n.var=10,prob0=0.35,
-         network="random")
+datas <- sim.data(model="ar1", time=10,n.obs=10, n.var=5,prob0=0.35,
+         network="scale-free")
 data.fit <-  datas$data1
 prec_true <- datas$theta
 autoR_true <- datas$gamma

@@ -44,8 +44,8 @@ A list containing:
 
 \examples{
 set.seed(321)
-datas <- sim.data(model="ar1", time=20,n.obs=20, n.var=20,prob0=0.15,
-         network="hub")
+datas <- sim.data(model="ar1", time=4,n.obs=3, n.var=5,prob0=0.35,
+         network="scale-free")
 data.ts <-  datas$data1
 prec_true <- datas$theta
 autoR_true <- datas$gamma

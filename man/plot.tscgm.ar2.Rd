@@ -42,8 +42,8 @@ Fentaw Abegaz and Ernst Wit
 ## Data generation from time series chain graphical model with vector 
 ## autoregressive model of order 2
 set.seed(321)
-datas <- sim.data(model="ar2", time=20,n.obs=50, n.var=10,prob0=0.25,
-         network="random")
+datas <- sim.data(model="ar2", time=10,n.obs=20, n.var=5,prob0=0.25,
+         network="scale-free")
 data.fit <-  datas$data1
 
 ## Model fitting with vector autoregressive order 2

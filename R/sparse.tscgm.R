@@ -23,15 +23,15 @@ sparse.tscgm <- function(data=data, lam1=NULL, lam2=NULL, nlambda=NULL, model=c(
   model = match.arg(model)
 
   if (model=="ar1") {
-   X <- xy.data[1:time-1,,]
-   Y <- xy.data[2:time,,]
+   X <- xy.data[1:time-1,,,drop=FALSE]
+   Y <- xy.data[2:time,,,drop=FALSE]
       }
   else if (model=="ar2") {
     t1=time-1
     t2=time-2
-    Y <- round(xy.data[3:time,,],3)
-    X1 <- round(xy.data[2:t1,,],3)
-    X2<- round(xy.data[1:t2,,],3)
+    Y <- round(xy.data[3:time,,,drop=FALSE],3)
+    X1 <- round(xy.data[2:t1,,,drop=FALSE],3)
+    X2<- round(xy.data[1:t2,,,drop=FALSE],3)
     X <- abind(X1, X2,along = 2 )
 
   }

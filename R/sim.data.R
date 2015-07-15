@@ -13,14 +13,20 @@ sim.data <-
     if(network=="random") {
       L = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=1234+r, vis = FALSE)
       LL = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=4567+r, vis = FALSE)
+      LLL = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=1564+r, vis = FALSE)
+
     }
-    else if(network=="cluster") {
+    else if(network=="scale-free") {
       L = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=1234+r, vis = FALSE)
       LL = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=4567+r, vis = FALSE)
+      LLL = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=1564+r, vis = FALSE)
+
     }
     else if(network=="hub") {
      L = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=1234+r, vis = FALSE)
-    LL = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=4567+r, vis = FALSE)
+     LL = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=4567+r, vis = FALSE)
+     LLL = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=1564+r, vis = FALSE)
+
    }
    if(network=="user_defined"){
        mu <- rep(0,d)
@@ -35,14 +41,25 @@ sim.data <-
   sigma1 <- L$sigma
   mu <- rep(0,d)
   thetaL = as.matrix(LL$omega*LL$theta)
-  lwt = 0*lower.tri(thetaL, diag =FALSE)
-  upt = thetaL*(1*upper.tri(thetaL, diag = FALSE))
+  thetaLL = as.matrix(LLL$omega*LLL$theta)
+  lwt = thetaL*(1*lower.tri(thetaL, diag =FALSE))
+  upt = thetaLL*(1*upper.tri(thetaLL, diag = FALSE))
   B=upt+lwt
-  ua=rbinom(d,1,0.02)
+  ua=rbinom(d,1,0.3)
   uu=runif(d,0,1)
   uau = ua*uu
   diag(B)= uau
-  true_gamma=B
+   B11 = B
+ for(i in 1:d){
+   for(j in 1:d){
+    if(B[i,j] != 0)
+       { m = rbinom(1,1,0.6)
+         if(m ==0) B11[i,j] = -B[i,j]
+       }
+
+  }}
+  true_gamma=B11
+
   }        #Gamma is the autoregressive coefficient matrix
   ##data generation
   xtn <-array(NA,c(t,d,n))
@@ -51,7 +68,7 @@ sim.data <-
     x0 <- rmvnorm(1, mu, sigma1, method="svd")
     for(j in 1:t){
       et <- rmvnorm(1, mu, sigma1, method="svd")
-      xt <-  x0 %*% B + et
+      xt <-  x0 %*% B11 + et
       xtt[j,,] <- xt
       x0 <- xt
    }
@@ -66,16 +83,22 @@ sim.data <-
     L = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=12346+r, vis = FALSE)
     LL = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=45678+r, vis = FALSE)
     LLL = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=43219+r, vis = FALSE)
+    LL1 = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=14578+r, vis = FALSE)
+    LLL1 = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=96879+r, vis = FALSE)
   }
-  else if(network=="cluster") {
+  else if(network=="scale-free") {
    L = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=12346+r, vis = FALSE)
    LL = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=45678+r, vis = FALSE)
    LLL = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=43219+r, vis = FALSE)
+   LL1 = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=14578+r, vis = FALSE)
+   LLL1 = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=96879+r, vis = FALSE)
   }
  else if(network=="hub") {
   L = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=12346+r, vis = FALSE)
   LL = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=45678+r, vis = FALSE)
   LLL = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=43219+r, vis = FALSE)
+  LL1 = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=14578+r, vis = FALSE)
+  LLL1 = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=96879+r, vis = FALSE)
  }
  if(network=="user_defined"){
         mu <- rep(0,d)
@@ -85,26 +108,49 @@ sim.data <-
        B2 <- gamma1
       }
   else{
- true_theta = as.matrix(L$omega*L$theta)
- diag(true_theta)=1     ##omega is the precision matrix
- sigma1 <- L$sigma
- mu <- rep(0,d)
- omegaL = as.matrix(LL$omega*LL$theta)
- lwt = 0*lower.tri(omegaL, diag =FALSE)
- upt = omegaL*(1*upper.tri(omegaL, diag = FALSE))
- B1=upt+lwt
- ua=rbinom(d,1,0.02)
- uu=runif(d,0,1)
- uau = ua*uu
- diag(B1)= uau
- omegaLL = as.matrix(LLL$omega*LLL$theta)
- lwt0 = 0*lower.tri(omegaLL, diag =FALSE)
- upt0 = omegaLL*(1*upper.tri(omegaLL, diag = FALSE))
- B2=upt0+lwt0
- ua=rbinom(d,1,0.01)
- uu=runif(d,0,1)
- uau = ua*uu
- diag(B2)= uau
+  true_theta = as.matrix(L$omega*L$theta)
+  diag(true_theta)=1     ##theta is the precision matrix
+  sigma1 <- L$sigma
+  mu <- rep(0,d)
+  thetaL = as.matrix(LL$omega*LL$theta)
+  thetaLL = as.matrix(LLL$omega*LLL$theta)
+  lwt = thetaL*(1*lower.tri(thetaL, diag =FALSE))
+  upt = thetaLL*(1*upper.tri(thetaLL, diag = FALSE))
+  B1c=upt+lwt
+  ua=rbinom(d,1,0.02)
+  uu=runif(d,0,1)
+  uau = ua*uu
+  diag(B1c)= uau
+   B11 = B1c
+ for(i in 1:d){
+   for(j in 1:d){
+    if(B1c[i,j] != 0)
+       { m = rbinom(1,1,0.4)
+         if(m ==0) B11[i,j] = -B1c[i,j]
+       }
+
+  }}
+  B1=B11
+  thetaL1 = as.matrix(LL1$omega*LL1$theta)
+  thetaLL1 = as.matrix(LLL1$omega*LLL1$theta)
+  lwt = thetaL1*(1*lower.tri(thetaL1, diag =FALSE))
+  upt = thetaLL1*(1*upper.tri(thetaLL1, diag = FALSE))
+  B2c=upt+lwt
+  ua=rbinom(d,1,0.02)
+  uu=runif(d,0,1)
+  uau = ua*uu
+  diag(B2c)= uau
+   B22 = B2c
+ for(i in 1:d){
+   for(j in 1:d){
+    if(B2c[i,j] != 0)
+       { m = rbinom(1,1,0.4)
+         if(m ==0) B22[i,j] = -B2c[i,j]
+       }
+
+  }}
+  B2=B22
+ 
  }
 #B1and B2 are the autoregressive coefficient matrices
 ##data generation
@@ -130,3 +176,5 @@ sim.data <-
  }
 }
 
+
+ 
