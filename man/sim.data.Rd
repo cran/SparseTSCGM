@@ -9,8 +9,8 @@ Generates sparse vector autoregressive coefficients matrices and
   generates  repeated multivariate  time series dataset.
   }
 \usage{
- sim.data(model=c("ar1","ar2"),time=time,n.obs=n.obs, n.var=n.var,prob0=NULL,
-          network=c("random","scale-free","hub","user_defined"),
+ sim.data(model=c("ar1","ar2"),time=time,n.obs=n.obs, n.var=n.var,seed=NULL,
+          prob0=NULL, network=c("random","scale-free","hub","user_defined"),
           prec=NULL,gamma1=NULL,gamma2=NULL)
 }
 \arguments{
@@ -22,6 +22,7 @@ Specifies the order of vector autoregressive models. Vector autoregressive
   \item{time}{ Number of time points.}
   \item{n.obs}{ Number of observations or replicates.}
   \item{n.var}{Number of variables.}
+  \item{seed}{Random number seed.}
   \item{prob0}{Initial sparsity level.}
   \item{network}{
 Specifies the type of network structure. This could be random, scale-free, hub
@@ -36,6 +37,7 @@ structures can be found in the R package \code{flare}.
 A list containing:
 \item{theta}{Sparse precision matrix. }
 \item{gamma}{Sparse autoregressive coefficients matrix.}
+\item{sigma}{Covariance matrix.}
 \item{data1}{Repeated multivariate time series data in longitudinal format.}
 }
 \author{
@@ -43,9 +45,9 @@ A list containing:
 }
 
 \examples{
-set.seed(321)
-datas <- sim.data(model="ar1", time=4,n.obs=3, n.var=5,prob0=0.35,
-         network="scale-free")
+seed = 321
+datas <- sim.data(model="ar1", time=4,n.obs=3, n.var=5,seed=seed,prob0=0.35,
+         network="random")
 data.ts <-  datas$data1
 prec_true <- datas$theta
 autoR_true <- datas$gamma

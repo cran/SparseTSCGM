@@ -17,8 +17,8 @@ Computes sparse autoregressive coefficient and precision matrices for time
 \tabular{ll}{
 Package: \tab SparseTSCGM\cr
 Type: \tab Package\cr
-Version: \tab 2.2\cr
-Date: \tab 2015-07-15\cr
+Version: \tab 2.5\cr
+Date: \tab 2015-12-11\cr
 License: \tab GPL (>=3) \cr
 LazyLoad: \tab yes\cr
 }
@@ -41,16 +41,17 @@ Maintainer: Fentaw Abegaz <f.abegaz.yazew@rug.nl>
 \keyword{package}
 \examples{
 
-set.seed(321)
-datas <- sim.data(model="ar1", time=10,n.obs=10, n.var=5,prob0=0.35,
-         network="scale-free")
+seed = 321
+datas <- sim.data(model="ar1", time=10,n.obs=10, n.var=5,seed=seed,prob0=0.35,
+         network="random")
 data.fit <-  datas$data1
 prec_true <- datas$theta
 autoR_true <- datas$gamma
     
    
 res.tscgm <- sparse.tscgm(data=data.fit, lam1=NULL, lam2=NULL, nlambda=NULL, 
- model="ar1", optimality="bic_ext",control=list(maxit.out = 10, maxit.in = 100))
+ model="ar1", penalty="scad", optimality="bic_mod",
+ control=list(maxit.out = 10, maxit.in = 100))
    
 #Estimated sparse precision and autoregression matrices
 prec <- res.tscgm$theta

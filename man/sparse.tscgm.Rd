@@ -13,7 +13,7 @@ Computes sparse vector autoregressive coefficients matrices of order 1 and
 }
 \usage{
 sparse.tscgm(data = data, lam1 = NULL, lam2 = NULL, nlambda = NULL, 
-      model = c("ar1", "ar2"), 
+      model = c("ar1", "ar2"), penalty=c("scad","lasso"),
       optimality = c("NULL", "bic", "bic_ext", "bic_mod", "aic", "gic"), 
       control = list())
 }
@@ -46,6 +46,11 @@ The number of values used in \code{lam1} and \code{lam2}. Default value is 10.
 This specifies the order of vector autoregressive models. Vector autoregressive 
   model of order 1 is applied if \code{model} = "ar1" and Vector autoregressive 
   model of order 2 is applied if  method = "ar2". 
+}
+\item{penalty}{
+This specifies the type of penalty function uto be used. SCAD penalty function 
+  is applied if \code{penalty} = "scad" and GLASSO is applied if
+  \code{penalty} = "lasso". 
 }
   \item{optimality}{
 This specifies the type of information based model selection criteria. When
@@ -125,16 +130,16 @@ autoregression matrix.}
 
 \examples{
 
-set.seed(321)
-datas <- sim.data(model="ar1", time=10,n.obs=10, n.var=5,prob0=0.35,
-         network="scale-free")
+seed = 321
+datas <- sim.data(model="ar1", time=10,n.obs=10, n.var=5,seed=seed,prob0=0.35,
+         network="random")
 data.fit <-  datas$data1
 prec_true <- datas$theta
 autoR_true <- datas$gamma
     
    
 res.tscgm <- sparse.tscgm(data=data.fit, lam1=NULL, lam2=NULL, nlambda=NULL, 
- model="ar1", optimality="bic_ext",control=list(maxit.out = 10, maxit.in = 100))
+ model="ar1", penalty="scad",optimality="bic_mod",control=list(maxit.out = 10, maxit.in = 100))
    
 #Estimated sparse precision and autoregression matrices
 prec <- res.tscgm$theta

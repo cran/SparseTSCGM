@@ -40,13 +40,13 @@ Fentaw Abegaz and Ernst Wit
 }
 \examples{
 
-set.seed(321)
-datas <- sim.data(model="ar1", time=10,n.obs=10, n.var=5,prob0=0.35,
-         network="scale-free")
+seed = 321
+datas <- sim.data(model="ar1", time=10,n.obs=10, n.var=5,seed=seed,prob0=0.35,
+         network="random")
 data.fit <-  datas$data1
 
  res.tscgm <- sparse.tscgm(data=data.fit, lam1=NULL, lam2=NULL, nlambda=NULL, 
- model="ar1", optimality="bic_ext",control=list(maxit.out = 10, maxit.in = 100))
+ model="ar1", penalty="scad",optimality="bic_mod",control=list(maxit.out = 10, maxit.in = 100))
   
 #Network visualization
  par(mfrow=c(2,1))

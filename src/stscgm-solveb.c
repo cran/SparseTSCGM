@@ -55,7 +55,7 @@ void blasso(double * Sin, double *Min, double *Omin, int * pin,
   }
   kit=0;
   bdiff=*tol+1;
-  while( (bdiff > *tol) && (kit < *maxit) )
+  while( (bdiff > *tol) || (kit < *maxit) )
   {
     kit+=1;
     bdiff = 0;

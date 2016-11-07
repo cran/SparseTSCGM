@@ -41,14 +41,14 @@ Fentaw Abegaz and Ernst Wit
 \examples{
 ## Data generation from time series chain graphical model with vector 
 ## autoregressive model of order 2
-set.seed(321)
-datas <- sim.data(model="ar2", time=10,n.obs=20, n.var=5,prob0=0.25,
-         network="scale-free")
+seed = 321
+datas <- sim.data(model="ar2", time=10,n.obs=20, n.var=5,seed=seed,prob0=0.35,
+         network="random")
 data.fit <-  datas$data1
 
 ## Model fitting with vector autoregressive order 2
  res.tscgm <- sparse.tscgm(data=data.fit, lam1=NULL, lam2=NULL, nlambda=NULL, 
- model="ar2", optimality="bic_mod",control=list(maxit.out = 10, maxit.in = 100))
+ model="ar2", penalty="scad",optimality="bic_mod",control=list(maxit.out = 10, maxit.in = 100))
   
 #Network visualization
  par(mfrow=c(3,2))

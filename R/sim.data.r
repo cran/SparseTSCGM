@@ -1,6 +1,6 @@
 
 sim.data <-
-  function(model=c("ar1","ar2"),time=time,n.obs=n.obs, n.var=n.var,prob0=NULL,
+  function(model=c("ar1","ar2"),time=time,n.obs=n.obs, n.var=n.var,seed=NULL, prob0=NULL,
   network=c("random","scale-free","hub","user_defined"),
   prec=NULL,gamma1=NULL,gamma2=NULL){
   model=match.arg(model)
@@ -8,24 +8,26 @@ sim.data <-
   t=time
   n=n.obs
   d=n.var
-  r= round(runif(1),4)*10000
+  if(is.numeric(seed)) r=0
+  else {seed = 123
+       r= round(runif(1),4)*10000}
   if(model=="ar1") {
     if(network=="random") {
-      L = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=1234+r, vis = FALSE)
-      LL = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=4567+r, vis = FALSE)
-      LLL = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=1564+r, vis = FALSE)
+      L = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=seed+1234+r, vis = FALSE)
+      LL = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=seed+4567+r, vis = FALSE)
+      LLL = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=seed+1564+r, vis = FALSE)
 
     }
     else if(network=="scale-free") {
-      L = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=1234+r, vis = FALSE)
-      LL = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=4567+r, vis = FALSE)
-      LLL = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=1564+r, vis = FALSE)
+      L = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=seed+1234+r, vis = FALSE)
+      LL = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=seed+4567+r, vis = FALSE)
+      LLL = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=seed+1564+r, vis = FALSE)
 
     }
     else if(network=="hub") {
-     L = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=1234+r, vis = FALSE)
-     LL = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=4567+r, vis = FALSE)
-     LLL = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=1564+r, vis = FALSE)
+     L = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=seed+1234+r, vis = FALSE)
+     LL = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=seed+4567+r, vis = FALSE)
+     LLL = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=seed+1564+r, vis = FALSE)
 
    }
    if(network=="user_defined"){
@@ -33,7 +35,7 @@ sim.data <-
        true_theta <- prec
        sigma1 <- solve(prec)
        true_gamma <- gamma1
-       B <- true_gamma
+       B11 <- true_gamma
    }
   else{
   true_theta = as.matrix(L$omega*L$theta)
@@ -76,29 +78,29 @@ sim.data <-
  }
  xy=matrix(aperm(xtn, c(3,1,2)), ncol=d)
  data1 <- as.longitudinal(xy, repeats=n)
- return(list(data1=data1,theta=true_theta, gamma=true_gamma))
+ return(list(data1=data1,theta=true_theta, gamma=true_gamma,sigma=sigma1))
  }
  if(model=="ar2") {
   if(network=="random") {
-    L = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=12346+r, vis = FALSE)
-    LL = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=45678+r, vis = FALSE)
-    LLL = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=43219+r, vis = FALSE)
-    LL1 = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=14578+r, vis = FALSE)
-    LLL1 = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=96879+r, vis = FALSE)
+    L = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=seed+12346+r, vis = FALSE)
+    LL = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=seed+45678+r, vis = FALSE)
+    LLL = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=seed+43219+r, vis = FALSE)
+    LL1 = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=seed+14578+r, vis = FALSE)
+    LLL1 = sugm.generator(n=n,d=d,graph="random", prob=prob0, seed=seed+96879+r, vis = FALSE)
   }
   else if(network=="scale-free") {
-   L = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=12346+r, vis = FALSE)
-   LL = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=45678+r, vis = FALSE)
-   LLL = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=43219+r, vis = FALSE)
-   LL1 = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=14578+r, vis = FALSE)
-   LLL1 = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=96879+r, vis = FALSE)
+   L = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=seed+12346+r, vis = FALSE)
+   LL = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=seed+45678+r, vis = FALSE)
+   LLL = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=seed+43219+r, vis = FALSE)
+   LL1 = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=seed+14578+r, vis = FALSE)
+   LLL1 = sugm.generator(n=n,d=d,graph="scale-free", prob=prob0, seed=seed+96879+r, vis = FALSE)
   }
  else if(network=="hub") {
-  L = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=12346+r, vis = FALSE)
-  LL = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=45678+r, vis = FALSE)
-  LLL = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=43219+r, vis = FALSE)
-  LL1 = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=14578+r, vis = FALSE)
-  LLL1 = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=96879+r, vis = FALSE)
+  L = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=seed+12346+r, vis = FALSE)
+  LL = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=seed+45678+r, vis = FALSE)
+  LLL = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=seed+43219+r, vis = FALSE)
+  LL1 = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=seed+14578+r, vis = FALSE)
+  LLL1 = sugm.generator(n=n,d=d,graph="hub", prob=prob0, seed=seed+96879+r, vis = FALSE)
  }
  if(network=="user_defined"){
         mu <- rep(0,d)
@@ -172,7 +174,7 @@ sim.data <-
   xy=matrix(aperm(xtn, c(3,1,2)), ncol=d)
   data1 <- as.longitudinal(xy, repeats=n)
 
- return(list(data1=data1,theta=true_theta, gamma=true_gamma))
+ return(list(data1=data1,theta=true_theta, gamma=true_gamma,sigma=sigma1))
  }
 }
 
