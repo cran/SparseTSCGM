@@ -17,8 +17,8 @@ Computes sparse autoregressive coefficient and precision matrices for time
 \tabular{ll}{
 Package: \tab SparseTSCGM\cr
 Type: \tab Package\cr
-Version: \tab 2.5\cr
-Date: \tab 2015-12-11\cr
+Version: \tab 3.0\cr
+Date: \tab 2020-05-23\cr
 License: \tab GPL (>=3) \cr
 LazyLoad: \tab yes\cr
 }

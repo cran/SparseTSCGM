@@ -1,5 +1,5 @@
-fe6face3c28e18b8ba558a68e3416c23 *DESCRIPTION
-0981315bfff0ae9ab2ffa79c9f11c44e *NAMESPACE
+bea2ae7506d03b5151dc61e0ff4573b8 *DESCRIPTION
+9261538fd8673cc17794e3e617e72553 *NAMESPACE
 27ad872299ab403761860a31776f2ce0 *R/compute.sparse.tscgm.R
 f18c30ffeb912c84f6f76a476c1d5daf *R/lam.generate.R
 01f5ca447763564a9c17c367fd661b8a *R/lambda.seq.R
@@ -8,12 +8,12 @@ a3280c58f8cb06d21ae4b354cfedb84d *R/plot.tscgm.ar2.r
 ab9befc613d079a88aa0dd69d8d9adce *R/pre.tscgm.R
 443c20844490c88baad5e2ff2be56f3a *R/print.tscgm.R
 fd26984482d50739a1cc5e18f7e70bca *R/rblasso.R
-983028f6a3b733d152d5357b59dedd73 *R/sim.data.r
+d85a8c3a242b2629c35a2b2c2aabecb8 *R/sim.data.r
 45a3d95e151696cf953413c083fe73b3 *R/sparse.tscgm.R
 aa50b2330afd14943ec149af7fc73ea1 *R/sparse.tscgm.bic.R
 2b6227f74aa2e39deca7142f62862487 *R/summary.tscgm.R
 1a1c7990fd98cd7bec8aa84633a41772 *data/mammary.RData
-0969de3eaa916a72d76949ea5aa737d8 *man/SparseTSCGM-package.Rd
+e38bdb59ca578a2dd5ffdbe28f463b85 *man/SparseTSCGM-package.Rd
 f38d5d5d203d727d97533b39da91e9f1 *man/mammary.Rd
 c2c9a981447820bf81a14bd1557d5a64 *man/plot.tscgm.Rd
 272d4a5123ae7717e63164106bd171af *man/plot.tscgm.ar2.Rd
