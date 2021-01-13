@@ -30,8 +30,3 @@ Fentaw Abegaz and Ernst Wit
 \seealso{
   \code{\link{sparse.tscgm}}
 }
-\examples{
-
-# print.tscgm(res.tscgm)
-
-}

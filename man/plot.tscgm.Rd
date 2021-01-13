@@ -49,7 +49,7 @@ data.fit <-  datas$data1
  model="ar1", penalty="scad",optimality="bic_mod",control=list(maxit.out = 10, maxit.in = 100))
   
 #Network visualization
- par(mfrow=c(2,1))
+oldpar <- par(mfrow=c(2,1))
 plot.tscgm(res.tscgm, mat="precision", main="Undirected network", pad = 0.01,
   label.pad = 0.3, label.col = 6, vertex.col = 5,vertex.cex = 1.5,
   edge.col = 4, mode = "fruchtermanreingold", interactive=FALSE)
@@ -57,7 +57,6 @@ plot.tscgm(res.tscgm, mat="precision", main="Undirected network", pad = 0.01,
 plot.tscgm(res.tscgm, mat="autoregression", main="Directed network", pad = 0.01,
   label.pad = 0.3, label.col = 6, vertex.col = 5,vertex.cex = 1.5,
   edge.col = 4, mode = "fruchtermanreingold", interactive=FALSE)
-  
-
+par(oldpar)
 }
 

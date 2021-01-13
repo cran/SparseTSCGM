@@ -17,8 +17,8 @@ Computes sparse autoregressive coefficient and precision matrices for time
 \tabular{ll}{
 Package: \tab SparseTSCGM\cr
 Type: \tab Package\cr
-Version: \tab 3.0\cr
-Date: \tab 2020-05-23\cr
+Version: \tab 4.0\cr
+Date: \tab 2021-01-12\cr
 License: \tab GPL (>=3) \cr
 LazyLoad: \tab yes\cr
 }
@@ -58,11 +58,11 @@ prec <- res.tscgm$theta
 autoR <- res.tscgm$gamma
 
 #Graphical visualization
-par(mfrow=c(2,2))
+oldpar <- par(mfrow=c(2,2))
 plot.tscgm(datas, mat="precision",main="True precision matrix")         
 plot.tscgm(res.tscgm, mat="precision",main="Estimated precision matrix")     
 plot.tscgm(datas, mat="autoregression",main="True autoregression coef. matrix")    
 plot.tscgm(res.tscgm, mat="autoregression",
            main="Estimated autoregression coef. matrix") 
-  
+par(oldpar)
 }

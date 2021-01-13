@@ -29,10 +29,10 @@
         #approx=FALSE ) #, start="warm", w.init=old.om0i, wi.init=old.om0)
         
          if(k==1){
-             g.out = QUIC(S=samp.cov,rho=lam11, tol=1.0e-4, msg=0, maxIter=1e4) 
+             g.out = glasso(s=samp.cov,rho=lam11, thr=1.0e-4, maxit=1e4, penalize.diagonal=FALSE)
               # X.init=old.om0, W.init=old.om0.i) 
-             old1.om=g.out$X    #wi
-	           old1.om.i=g.out$W   #w
+             old1.om=g.out$wi    #wi
+	           old1.om.i=g.out$w   #w
                        
             if(!is.numeric(old1.om))  old1.om <- diag(q)
             # Calculating SCAD penalty
@@ -47,11 +47,11 @@
               }}
              diag(wt) <- 0 
               
-             g.out1 = QUIC(S=samp.cov,rho=wt, tol=1.0e-4, msg=0, maxIter=1e4, 
-                X.init=old1.om, W.init=old1.om.i)  
+             g.out1 = glasso(s=samp.cov,rho=wt, thr=1.0e-4, maxit=1e4, penalize.diagonal=FALSE,
+                start="warm", w.init=old1.om.i, wi.init=old1.om)
                 
-             old.om=g.out1$X    #wi
-             old.om.i=g.out1$W   #w            
+             old.om=g.out1$wi    #wi
+             old.om.i=g.out1$w   #w
                        
              }
           
@@ -72,11 +72,11 @@
                 }}
              diag(wt) <- 0
              
-             g.out1 = QUIC(S=samp.cov,rho=wt, tol=1.0e-4, msg=0, maxIter=1e4, 
-                X.init=old1.om, W.init=old1.om.i)  
+             g.out1 = glasso(s=samp.cov,rho=wt, thr=1.0e-4, maxit=1e4, penalize.diagonal=FALSE,
+                start="warm", w.init=old1.om.i, wi.init=old1.om)
                 
-          old.om=g.out1$X    #wi
-          old.om.i=g.out1$W   #w 
+          old.om=g.out1$wi    #wi
+          old.om.i=g.out1$w   #w
           #old1.om =  old.om
           #old1.om.i = old.om.i
          } 
@@ -125,9 +125,9 @@
    	   old.B=B
           if( (bdist < setting$tol.out*mab) | (k > setting$maxit.out))
     	      break
-     cat("Outer iterations: ", k, "\n")
-     cat("lambda1=",lam1, "\n")
-     cat("lambda2=",lam2, "\n")
+     message("Outer iterations: ", k, "\n")
+     message("lambda1 = ", lam1, "\n")
+     message("lambda2 = ", lam2, "\n")
    }
   } 
   
@@ -142,10 +142,10 @@
         #approx=FALSE ) #, start="warm", w.init=old.om0i, wi.init=old.om0)
         
          if(k==1){
-             g.out = QUIC(S=samp.cov,rho=lam11, tol=1.0e-4, msg=0, maxIter=1e4) 
+             g.out = glasso(s=samp.cov,rho=lam11, thr=1.0e-4, maxit=1e4, penalize.diagonal=FALSE)
               # X.init=old.om0, W.init=old.om0.i) 
-             old.om=g.out$X    #wi
-	           old.om.i=g.out$W           
+             old.om=g.out$wi    #wi
+	           old.om.i=g.out$w
             }
           
           
@@ -153,11 +153,11 @@
              old1.om =  old.om
              old1.om.i = old.om.i 
                           
-             g.out1 = QUIC(S=samp.cov,rho=lam11, tol=1.0e-4, msg=0, maxIter=1e4, 
-                X.init=old1.om, W.init=old1.om.i)  
+             g.out1 = glasso(s=samp.cov,rho=lam11, thr=1.0e-4, maxit=1e4, penalize.diagonal=FALSE,
+                start="warm", w.init=old1.om.i, wi.init=old1.om)
                 
-          old.om=g.out1$X    #wi
-          old.om.i=g.out1$W   #w 
+          old.om=g.out1$wi    #wi
+          old.om.i=g.out1$w   #w
           #old1.om =  old.om
           #old1.om.i = old.om.i
          } 
@@ -181,9 +181,9 @@
    	   old.B=B
           if( (bdist < setting$tol.out*mab) | (k > setting$maxit.out))
     	      break
-     cat("Outer iterations: ", k, "\n")
-     cat("lambda1=",lam1, "\n")
-     cat("lambda2=",lam2, "\n")
+     message("Outer iterations: ", k, "\n")
+     message("lambda1 = ",lam1, "\n")
+     message("lambda2 = ",lam2, "\n")
    }
   }     
   if(setting$silent ==FALSE) cat("Total outer iterations for tscgm : ", k, "\n")

@@ -154,13 +154,13 @@ sparsity_theta <- res.tscgm$s.theta
 sparsity_gamma <- res.tscgm$s.gamma
 
 #Graphical visualization
-par(mfrow=c(2,2))
+oldpar <- par(mfrow=c(2,2))
 plot.tscgm(datas, mat="precision",main="True precision matrix")         
 plot.tscgm(res.tscgm, mat="precision",main="Estimated precision matrix")     
 plot.tscgm(datas, mat="autoregression",main="True autoregression coef. matrix")     
 plot.tscgm(res.tscgm, mat="autoregression",
              main="Estimated autoregression coef. matrix") 
-
+par(oldpar)
 
 }
 

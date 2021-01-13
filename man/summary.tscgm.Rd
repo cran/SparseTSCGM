@@ -45,8 +45,4 @@ Fentaw Abegaz and Ernst Wit
 \seealso{
   \code{\link{sparse.tscgm}}
 }
-\examples{
-   
- # summary.tscgm(res.tscgm)
 
-}
